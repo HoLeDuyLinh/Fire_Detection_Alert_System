@@ -3,6 +3,15 @@
 #include <WiFiManager.h>
 
 //----------------------------------------------------------------
+#define WIFI_SSID "YOUR_WIFI_SSID"
+#define WIFI_PASSWORD "YOUR_WIFI_PASSWORD"
+#define MQTT_BROKER "YOUR_MQTT_BROKER_ESP32"
+#define MQTT_PORT 8883
+#define MQTT_CLIENT_ID "YOUR_MQTT_CLIENT_ID_ESP32"
+#define MQTT_USERNAME "YOUR_MQTT_USERNAME_ESP32"
+#define MQTT_PASSWORD "YOUR_MQTT_PASSWORD_ESP32"
+
+//----------------------------------------------------------------
 // KHAI BÁO BIẾN VÀ ĐỐI TƯỢNG
 //----------------------------------------------------------------
 LiquidCrystal_I2C lcd(0x27, 20, 4);
@@ -196,8 +205,8 @@ void setup() {
     }
     if (WiFi.status() == WL_CONNECTED) {
         secureClient.setInsecure();
-        mqtt_init(secureClient, " ", , " ");
-        mqtt_set_auth(" ", " ");
+        mqtt_init(secureClient, MQTT_BROKER, MQTT_PORT, MQTT_CLIENT_ID);
+        mqtt_set_auth(MQTT_USERNAME, MQTT_PASSWORD);
         mqtt_set_callback(my_mqtt_callback);
         mqtt_connect();
         mqtt_subscribe(PHONE_NUMBER_TOPIC);
@@ -627,7 +636,7 @@ void edit_limit(float &value, const char *text, const char *unit, screen_index_t
 static void wifi_infor_screen() {
     lcd.clear();
     lcd.setCursor(0, 0);
-    lcd.print("SSID: " + WiFi.SSID());
+    lcd.print("SSID: " + String(WIFI_SSID));
     lcd.setCursor(0, 2);
     lcd.print("IP: " + WiFi.localIP().toString());
     while (1) {
