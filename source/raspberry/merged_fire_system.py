@@ -44,26 +44,26 @@ CAPTURE_DIR = '/home/pi/fire_alert/captures'
 CSV_PATH    = '/home/pi/fire_alert/captures/fire_log.csv'
 
 # ---------- Email ----------
-SMTP = {"host":" ","port":,
-        "sender":" ","password":" "}
-RECIPIENT = " "
+SMTP = {"host":"YOUR_SMTP_HOST","port":YOUR_SMTP_PORT,
+        "sender":"YOUR_SMTP_SENDER_EMAIL","password":"YOUR_SMTP_PASSWORD"}
+RECIPIENT = "YOUR_RECIPIENT_EMAIL"
 
 
 # ---------- Firebase ----------
 FB_CFG = { 
-    "apiKey":" ", 
-    "authDomain":" ", 
-    "databaseURL":" ", 
-    "storageBucket":" " 
+    "apiKey":"YOUR_FIREBASE_API_KEY", 
+    "authDomain":"YOUR_FIREBASE_AUTH_DOMAIN", 
+    "databaseURL":"YOUR_FIREBASE_DATABASE_URL", 
+    "storageBucket":"YOUR_FIREBASE_STORAGE_BUCKET"
     }
 firebase = pyrebase.initialize_app(FB_CFG)
 db       = firebase.database()
 
 # ---------- MQTT ----------
-BROKER = " "
-PORT   = 
-USER   = " "
-PASS   = " "
+BROKER = "YOUR_MQTT_BROKER"
+PORT   = YOUR_MQTT_PORT
+USER   = "YOUR_MQTT_USERNAME"
+PASS   = "YOUR_MQTT_PASSWORD"
 TOPIC_SENSOR      = "esp32/sensors"
 TOPIC_LIMITVALUE  = "esp32/limit_value"
 TOPIC_CAM_RESULT  = "raspberrypi/camera"
