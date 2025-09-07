@@ -44,26 +44,26 @@ CAPTURE_DIR = '/home/pi/fire_alert/captures'
 CSV_PATH    = '/home/pi/fire_alert/captures/fire_log.csv'
 
 # ---------- Email ----------
-SMTP = {"host":"smtp.gmail.com","port":465,
-        "sender":"linhsama2212@gmail.com","password":"bghn qgud dddp iveu"}
-RECIPIENT = "holeduylinh2212@gmail.com"
+SMTP = {"host":" ","port":,
+        "sender":" ","password":" "}
+RECIPIENT = " "
 
 
 # ---------- Firebase ----------
 FB_CFG = { 
-    "apiKey":"AIzaSyB4wjvk7v8AVVJscn0BM_HoA1hcufWK5C4", 
-    "authDomain":"firedetect-f1fb2.firebaseapp.com", 
-    "databaseURL":"https://firedetect-f1fb2-default-rtdb.asia-southeast1.firebasedatabase.app/", 
-    "storageBucket":"firedetect-f1fb2.appspot.com" 
+    "apiKey":" ", 
+    "authDomain":" ", 
+    "databaseURL":" ", 
+    "storageBucket":" " 
     }
 firebase = pyrebase.initialize_app(FB_CFG)
 db       = firebase.database()
 
 # ---------- MQTT ----------
-BROKER = "bd92efa291a44e2497fa3e60484e25c3.s1.eu.hivemq.cloud"
-PORT   = 8883
-USER   = "linh_mqtt"
-PASS   = "Linhsama22122003"
+BROKER = " "
+PORT   = 
+USER   = " "
+PASS   = " "
 TOPIC_SENSOR      = "esp32/sensors"
 TOPIC_LIMITVALUE  = "esp32/limit_value"
 TOPIC_CAM_RESULT  = "raspberrypi/camera"
