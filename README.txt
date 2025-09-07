@@ -3,7 +3,7 @@
 
 Hệ thống kết hợp **phần cứng, phần mềm nhúng, trí tuệ nhân tạo và giao diện web** nhằm *phát hiện sớm các nguy cơ hỏa hoạn* và *cảnh báo đa kênh* (còi, SMS GSM, MQTT, dashboard thời gian thực).
 
-> Sinh viên thực hiện: **Hồ Lê Duy Linh – 42101324 – Đại học Tôn Đức Thắng**
+> Sinh viên thực hiện: **Hồ Lê Duy Linh – Đại học Tôn Đức Thắng**
 
 ---
 
