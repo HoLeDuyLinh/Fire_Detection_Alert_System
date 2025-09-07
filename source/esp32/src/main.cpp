@@ -196,8 +196,8 @@ void setup() {
     }
     if (WiFi.status() == WL_CONNECTED) {
         secureClient.setInsecure();
-        mqtt_init(secureClient, "bd92efa291a44e2497fa3e60484e25c3.s1.eu.hivemq.cloud", 8883, "esp123456");
-        mqtt_set_auth("linh_mqtt", "Linhsama22122003");
+        mqtt_init(secureClient, " ", , " ");
+        mqtt_set_auth(" ", " ");
         mqtt_set_callback(my_mqtt_callback);
         mqtt_connect();
         mqtt_subscribe(PHONE_NUMBER_TOPIC);
