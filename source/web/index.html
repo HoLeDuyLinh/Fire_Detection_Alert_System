@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Fire Detection and Fire Severity Alert System</title>
+
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="styles.css" />
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+  <!-- Paho MQTT Client -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.0.1/mqttws31.min.js"></script>
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <!-- Navigation -->
+  <nav class="navbar">
+    <div class="nav-content">
+      <h1><i class="fas fa-fire"></i> Fire Detection and Fire Severity Alert System</h1>
+      <ul class="nav-links">
+        <li><button id="theme-toggle"><i class="fas fa-moon"></i> Chế độ tối</button></li>
+      </ul>
+      <button id="menu-toggle" class="menu-toggle"><i class="fas fa-bars"></i></button>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <div class="container">
+      <div id="alert-container" class="alert hidden"></div>
+
+      <!-- Data Table Section -->
+      <section class="card">
+        <div class="card-header">
+          <h2>Dữ liệu cảm biến</h2>
+          <button id="download-csv" class="btn btn-download"><i class="fas fa-download"></i> Tải toàn bộ dữ liệu</button>
+        </div>
+        <div id="loading-spinner" class="spinner hidden"></div>
+        <div class="table-wrapper">
+          <table id="data-table">
+            <thead>
+              <tr>
+                <th>Thời gian</th>
+                <th>Nhiệt độ (°C)</th>
+                <th>Độ ẩm (%)</th>
+                <th>CO</th>
+                <th>GAS</th>
+                <th>Lửa</th>
+                <th>Nhiệt độ môi trường (°C)</th>
+                <th>Nhiệt độ vật thể (°C)</th>
+              </tr>
+            </thead>
+            <tbody id="table-body">
+              <tr><td colspan="7">Đang tải dữ liệu...</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="expand-toggle">
+          <button id="expand-table" class="btn btn-expand"><i class="fas fa-chevron-down"></i> Xem thêm</button>
+        </div>
+      </section>
+
+      <!-- Live Camera Section -->
+      <section class="card" id="live-card">
+        <h2>Camera realtime</h2>
+        <img id="live-cam" class="stream" alt="camera"/>
+      </section>
+
+      <!-- Chart Section -->
+      <section class="card chart-section">
+        <h2>Biểu đồ dữ liệu</h2>
+        <canvas id="sensor-chart"></canvas>
+      </section>
+
+      <!-- Phone configuration -->
+      <section class="card">
+        <h2>Cấu hình số điện thoại cảnh báo</h2>
+        <div style="display:flex; gap:12px; align-items:center; flex-wrap:wrap">
+          <input id="phone-input" type="text" placeholder="Số điện thoại (VD: 0901234567)" style="flex:1; min-width:260px; padding:10px; border:1px solid #d1d5db; border-radius:8px"/>
+          <button id="save-phone" class="btn"><i class="fas fa-save"></i> Lưu số điện thoại</button>
+        </div>
+        <small id="phone-help" style="display:block; margin-top:8px; color:#6b7280">Nhập 9–11 chữ số, bắt đầu bằng 0. Số này sẽ nhận SMS cảnh báo.</small>
+        <div id="phone-status" style="margin-top:10px; font-weight:600;"></div>
+      </section>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <p>© 2025 Fire Detection and Fire Severity Alert System. All rights reserved.</p>
+  </footer>
+
+  <audio id="alert-sound" src="https://www.soundjay.com/buttons/beep-01a.mp3"></audio>
+
+  <!-- Socket.IO client (với IP thật của Raspberry Pi) -->
+  <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+
+  <!-- Firebase + MQTT logic -->
+  <script src="script.js"></script>
+
+  <script>
+    const menuToggle = document.getElementById('menu-toggle');
+    const navLinks = document.querySelector('.nav-links');
+    menuToggle.addEventListener('click', () => {
+      navLinks.classList.toggle('active');
+    });
+
+    const themeToggle = document.getElementById('theme-toggle');
+    themeToggle.addEventListener('click', () => {
+      document.body.classList.toggle('dark');
+      themeToggle.innerHTML = document.body.classList.contains('dark')
+        ? '<i class="fas fa-sun"></i> Chế độ sáng'
+        : '<i class="fas fa-moon"></i> Chế độ tối';
+    });
+
+    const sections = document.querySelectorAll('.card');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.1 });
+
+    sections.forEach(section => observer.observe(section));
+  </script>
+</body>
+</html>
+
+// ========================== CAMERA STREAM (SOCKET.IO) ==========================
+const camImg = document.getElementById("live-cam");
+
+// Đặt đúng IP Raspberry và port Flask-SocketIO đang chạy
+const socket = io("http://192.168.1.143:5000");  // <-- thay IP nếu cần
+
+socket.on("connect", () => {
+  console.log("Socket.IO connected");
+});
+
+socket.on("frame", (data) => {
+  camImg.src = "data:image/jpeg;base64," + data;
+});
+
+socket.on("disconnect", () => {
+  console.warn("Socket.IO disconnected");
+});
