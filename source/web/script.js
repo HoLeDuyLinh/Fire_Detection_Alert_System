@@ -1,12 +1,12 @@
 const firebaseConfig = {
-  apiKey: "AIzaSyB4wjvk7v8AVVJscn0BM_HoA1hcufWK5C4",
-  authDomain: "firedetect-f1fb2.firebaseapp.com",
-  databaseURL: "https://firedetect-f1fb2-default-rtdb.asia-southeast1.firebasedatabase.app",
-  projectId: "firedetect-f1fb2",
-  storageBucket: "firedetect-f1fb2.appspot.com",
-  messagingSenderId: "209368035588",
-  appId: "1:209368035588:web:b0cf8820100b07b2d9a051",
-  measurementId: "G-WBLCB687P0"
+  apiKey: " YOUR_API_KEY",
+  authDomain: "YOUR_AUTH_DOMAIN",
+  databaseURL: "YOUR_URL",
+  projectId: "YOUR_ID",
+  storageBucket: "YOUR_BUCKET",
+  messagingSenderId: "YOUR_SENDER_ID",
+  appId: "YOUR_APP_ID",
+  measurementId: "YOUR_MEASUREMENT_ID"
 };
 
 // Initialize Firebase
